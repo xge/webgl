@@ -1,0 +1,28 @@
+{
+  "name": "webgl",
+  "version": "1.0.0",
+  "description": "WebGL Experiments",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xge/webgl.git"
+  },
+  "keywords": [
+    "es6",
+    "webgl",
+    "gulp"
+  ],
+  "author": "Hagen <spam@xgerdax.de>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xge/webgl/issues"
+  },
+  "homepage": "https://github.com/xge/webgl#readme",
+  "devDependencies": {
+    "babel-eslint": "^5.0.0-beta6",
+    "babel-preset-es2015": "^6.3.13",
+    "eslint": "^1.10.3",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^6.1.1",
+    "gulp-eslint": "^1.1.1"
+  }
+}
