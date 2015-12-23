@@ -28,7 +28,7 @@ gulp.task('assets', ['deps'], function () {
 });
 
 // after linting and copying we're doing the babel thing
-gulp.task('babel', ['lint', 'assets'], function() {
+gulp.task('babel', ['lint'], function() {
     return gulp.src('src/js/**/*.js')
         .pipe(babel({
             presets: ['es2015']
@@ -42,11 +42,19 @@ gulp.task('connect', function() {
   });
 });
 
+gulp.task('watch', ['watch:js', 'watch:html']);
+
 gulp.task('watch:js', ['babel'], function() {
     watch('src/js/**/*.js', { emitOnGlob: true }, function() {
         gulp.run('babel');
     });
 });
 
-gulp.task('default', ['babel']);
-gulp.task('serve', ['babel', 'watch:js', 'connect']);
+gulp.task('watch:html', ['babel'], function() {
+    watch('src/**/*.html', { emitOnGlob: true }, function() {
+        gulp.run('assets');
+    });
+});
+
+gulp.task('default', ['babel', 'assets']);
+gulp.task('serve', ['assets', 'babel', 'watch', 'connect']);

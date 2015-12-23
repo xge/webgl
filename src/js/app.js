@@ -5,12 +5,6 @@ function init() {
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 5;
 
-        // add spot light
-    var spLight = new THREE.SpotLight(0xffffff, 1.75, 2000, Math.PI / 3);
-    spLight.castShadow = true;
-    spLight.position.set(-100, 300, -50);
-    scene.add(spLight);
-
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
@@ -19,7 +13,10 @@ function init() {
     loader.load('obj/1.obj', function (object) {
             object.traverse(function (child) {
                 if (child instanceof THREE.Mesh) {
-                    child.material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+                    child.material = new THREE.ShaderMaterial({
+                        vertexShader: document.getElementById('baseVert').textContent,
+                        fragmentShader: document.getElementById('cellFrag').textContent
+                    });
                 }
             });
             obj = object;
