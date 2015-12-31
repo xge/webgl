@@ -2,34 +2,34 @@ const gulp = require('gulp'),
     babel = require('gulp-babel'),
     connect = require('gulp-connect'),
     eslint = require('gulp-eslint'),
+    inlineSource = require('gulp-inline-source'),
     notif = require('gulp-notify'),
     watch = require('gulp-watch');
 
-// Lint that script!
-gulp.task('lint', function() {
-    return gulp.src('src/js/**/*.js')
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-});
-
 // Copy dependencies to dist/js
 gulp.task('deps', function() {
-    return gulp.src([
+    gulp.src([
         'node_modules/three/three.js'
     ]).pipe(gulp.dest('dist/js'));
+
+    gulp.src([
+        'assets/**/*'
+    ]).pipe(gulp.dest('dist/'));
+
 });
 
-// Copy html and css
-gulp.task('assets', ['deps'], function () {
-    return gulp.src([
-        'src/**/*', '!src/js'
-    ]).pipe(gulp.dest('dist/'));
+gulp.task('inline', function () {
+    return gulp.src('src/index.html')
+        .pipe(inlineSource({compress: false}))
+        .pipe(gulp.dest('dist/'));
 });
 
 // after linting and copying we're doing the babel thing
-gulp.task('babel', ['lint'], function() {
+gulp.task('babel', function() {
     return gulp.src('src/js/**/*.js')
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError())
         .pipe(babel({
             presets: ['es2015']
         }))
@@ -50,11 +50,11 @@ gulp.task('watch:js', ['babel'], function() {
     });
 });
 
-gulp.task('watch:html', ['babel'], function() {
-    watch('src/**/*.html', { emitOnGlob: true }, function() {
-        gulp.run('assets');
+gulp.task('watch:html', function() {
+    watch(['src/**/*.html', 'src/shaders/*'], { emitOnGlob: true }, function() {
+        gulp.run('inline');
     });
 });
 
-gulp.task('default', ['babel', 'assets']);
-gulp.task('serve', ['assets', 'babel', 'watch', 'connect']);
+gulp.task('default', ['deps', 'inline', 'babel']);
+gulp.task('serve', ['default', 'watch', 'connect']);
